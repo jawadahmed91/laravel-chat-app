@@ -44,6 +44,11 @@ All apps are connected via:
 
 
 ```bash
+  composer install
+  npm install
+  npm run dev
+  cp .env.example .env
+  php artisan key:generate
   php artisan serve --port=8001
   php artisan reverb:start
   redis-server
