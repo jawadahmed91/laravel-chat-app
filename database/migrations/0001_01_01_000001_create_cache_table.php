@@ -8,6 +8,28 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * 
+     * 
+     * -- Create cache table
+        CREATE TABLE `cache` (
+        `key` VARCHAR(255) NOT NULL,
+        `value` MEDIUMTEXT NOT NULL,
+        `expiration` INT NOT NULL,
+        PRIMARY KEY (`key`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+        -- Create cache_locks table
+        CREATE TABLE `cache_locks` (
+        `key` VARCHAR(255) NOT NULL,
+        `owner` VARCHAR(255) NOT NULL,
+        `expiration` INT NOT NULL,
+        PRIMARY KEY (`key`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+        -- Optional: Add indexes for better performance
+        CREATE INDEX `idx_cache_expiration` ON `cache` (`expiration`);
+        CREATE INDEX `idx_cache_locks_expiration` ON `cache_locks` (`expiration`);
+
      */
     public function up(): void
     {

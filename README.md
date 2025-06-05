@@ -41,3 +41,10 @@ All apps are connected via:
   - Vue Dev Server (localhost:5173)
 
 ### 📁 Project Structure
+
+
+```bash
+  php artisan serve --port=8001
+  php artisan reverb:start
+  redis-server
+  php artisan queue:work

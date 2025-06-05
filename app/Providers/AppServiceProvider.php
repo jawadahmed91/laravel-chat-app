@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Telescope\Telescope;
+use Laravel\Telescope\IncomingEntry;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Enable Telescope to track everything (optional — can be customized)
+        Telescope::filter(function (IncomingEntry $entry) {
+            return true;
+        });
     }
 }

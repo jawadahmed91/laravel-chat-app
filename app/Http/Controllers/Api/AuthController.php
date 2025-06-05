@@ -7,9 +7,52 @@ use App\Http\Controllers\Controller;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 class AuthController extends Controller
 {
+    /**
+     * Get SSO token from CodeIgniter CRM
+     */
+    public function checkSSO()
+    {
+        // try {
+            // Request token from CodeIgniter SSO endpoint
+            $response = Http::get('http://localhost:8080/api/sso/token');
+            
+            if ($response->failed()) {
+                return response()->json(['message' => 'Not logged in on CI'], 401);
+            }
+
+            $token = $response->json('token');
+
+            // Decode and authenticate like before
+            $decoded = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
+            $user = User::firstOrCreate(
+                ['id' => $decoded->sub],
+                [
+                    'name' => $decoded->name,
+                    'email' => $decoded->email,
+                    'role' => $decoded->role,
+                    'password' => Hash::make(Str::random(20)),
+                ]
+            );
+
+            auth()->setUser($user);
+
+            return response()->json([
+                'message' => 'SSO success',
+                'user' => $user
+            ]);
+        // } catch (\Exception $e) {
+        //     return response()->json(['message' => 'SSO Failed', 'error' => $e->getMessage()], 401);
+        // }
+    }
+
+
     public function check(Request $request): JsonResponse
     {
         // Get decoded user data from middleware
