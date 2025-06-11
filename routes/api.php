@@ -3,7 +3,7 @@
 use App\Events\UserTyping;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\Api\ChatController;
-use App\Http\Middleware\JwtMiddleware;
+// use App\Http\Middleware\JwtMiddleware;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TokenController;
 use App\Http\Controllers\Auth\SsoLoginController;
@@ -39,15 +39,20 @@ Route::middleware(JwtMiddleware::class)->group(function () {
     Route::get('/auth/refresh-token', [AuthController::class, 'refreshToken']);
 });
 
-Route::middleware('verify.sso.jwt')->group(function () {
-    Route::get('/user', fn () => auth()->user());
-});
+// Route::middleware('verify.sso.jwt')->group(function () {
+//     Route::get('/user', fn () => auth()->user());
+// });
 
-// Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware(['sso.auth'])->group(function () {
+//     Route::get('/messages', [ChatController::class, 'index']);
+//     Route::post('/send-message', [ChatController::class, 'send']);
+// });
+
+Route::middleware(['sso.auth'])->group(function () {
   Route::post('/chat/room', [ChatRoomController::class, 'store']);
   Route::post('/chat/message/send', [MessageController::class, 'send']);
   Route::get('/chat/messages', [MessageController::class, 'fetch']);
-// });
+});
 
 Route::post('/chat/typing', function (Request $request) {
     $request->validate([

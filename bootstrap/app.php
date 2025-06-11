@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
+        $middleware->alias([
+            'sso.auth' => \App\Http\Middleware\SSOAuth::class,
+        ]);
+
         $middleware->validateCsrfTokens(except: [
             'telescope/*',
             'telescope/telescope-api/*',
